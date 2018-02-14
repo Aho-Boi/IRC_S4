@@ -75,8 +75,8 @@ size_t euclide(size_t a, size_t b)
 
 size_t mod(size_t a, size_t pow, size_t n)
 {
-  size_t b = a % n;
-  for(size_t i = 1; i < pow; i++){
+  size_t b = 1;
+  for(size_t i = 0; i < pow; i++){
     b *= a;
     b %= n;
   }

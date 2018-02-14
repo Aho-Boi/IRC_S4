@@ -16,7 +16,8 @@ void create_keys(size_t *res, size_t maxd)
     n = p * q;
     ph = (p - 1) * (q - 1);
     d = euclide(e, ph);
-  }  
+  }
+
   res[0] = n;
   res[1] = e;
   res[2] = d;
@@ -45,10 +46,9 @@ int test_keys(size_t *keys)
 
 int main()
 {
-
+  
   size_t *keys = malloc(3 * sizeof(size_t));
   create_keys(keys, 10000000);
-
 
   while(!test_keys(keys)){
     create_keys(keys, 10000000);
@@ -56,7 +56,7 @@ int main()
   printf("The public key is : \n\tn = %lu\n\te = %lu\n\n", keys[0], keys[1]);
   printf("The private key is : \n\td = %lu\n\n", keys[2]);
 
-  char mes[] = "Ceci est le message";
+  char mes[] = "ABCDEFGHIJKLMNOPQRSTUVWXYZ 1234567890 abcdefghijklmnopqrstuvwxyz";
 
 
   
@@ -65,28 +65,25 @@ int main()
   int *encrypted = malloc(len * sizeof(int));
   for(size_t i = 0; i < len; i++){
     *(encrypted + i) = encrypt(mes[i], keys[0], keys[1]);
+    printf("The letter %c is encrypted into %d\n", mes[i], encrypted[i]);
   }
   
   for(size_t i = 0; i < len; i++){
-    printf("The letter %c is encrypted into %d\n", mes[i], encrypted[i]);
+
   }
+  printf("\n");
 
   char *decrypted = malloc(len);
   for(size_t i = 0; i < len; i++){
     *(decrypted + i) = decrypt(encrypted[i], keys[2], keys[0]); 
-  }
-  
-  for(size_t i = 0; i < len; i++){
     printf("The letter %c is decrypted into %c\n", mes[i], decrypted[i]);
   }
+  
 
   free(decrypted);
   free(encrypted);
   free(keys);
-  
-  //size_t *keys = malloc(3 * sizeof(size_t));
-
-  
+    
   
   return 0;
 }
