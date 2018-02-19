@@ -6,7 +6,6 @@ void create_keys(size_t *res, size_t maxd)
   size_t e = 65537;
   size_t p = createprime(1000, 2); //p a prime > 100 000 000 on 4 bytes
   size_t q = createprime(1000, 2); //q a prime > 100 000 000 on 4 bytes
-  
   size_t n = p * q;
   size_t ph = (p - 1) * (q - 1);
   size_t d = euclide(e, ph);
@@ -46,10 +45,8 @@ int test_keys(size_t *keys)
 
 int main()
 {
-  
   size_t *keys = malloc(3 * sizeof(size_t));
   create_keys(keys, 10000000);
-
   while(!test_keys(keys)){
     create_keys(keys, 10000000);
   }
@@ -68,9 +65,6 @@ int main()
     printf("The letter %c is encrypted into %d\n", mes[i], encrypted[i]);
   }
   
-  for(size_t i = 0; i < len; i++){
-
-  }
   printf("\n");
 
   char *decrypted = malloc(len);
@@ -83,7 +77,6 @@ int main()
   free(decrypted);
   free(encrypted);
   free(keys);
-    
   
   return 0;
 }

@@ -34,6 +34,7 @@ size_t createrandom(size_t bsize)
       random[i] *= -1;
     res += random[i] * pows(2, 8*i);
   }
+  free(random);
   return res;
 
   
@@ -43,9 +44,7 @@ size_t createrandom(size_t bsize)
 size_t createprime(size_t min, size_t bytesize)
 {
   size_t r = 0;
-  for(; !r || ( min && r < min);r = createrandom(bytesize) ) {
-    continue;
-  }
+  for(; !r || ( min && r < min);r = createrandom(bytesize) );
 
     if ( !(r % 2) ) r+=1;
   for(; !(isprime(r)); r += 2 );
@@ -118,8 +117,9 @@ int main(void)
   }
   printf("\tAre prime, for a total of %lu primes to 100\n", j);
   free(mem);
- 
-  printf("%ld\n", euclide(120, 23));
+
   return 0;
 }
 */
+
+
