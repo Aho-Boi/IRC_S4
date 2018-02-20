@@ -43,6 +43,7 @@ void sigint_handler(int sig) {
 }
 void server(const char *portname)
 {
+  //char buffer[1024];
   int info_err = 0;
   struct addrinfo hints, *resinfo = NULL;
   struct addrinfo *rp;
@@ -63,8 +64,11 @@ void server(const char *portname)
   int cnx = 0;
   int reuse_err;
   int reuse = 1;
+  //int i = 0;
   for(rp = resinfo; rp != NULL; rp = rp->ai_next)
   {
+   //buffer[i] = cnx;
+   //i++;
    cnx = socket(rp->ai_family, rp->ai_socktype, rp->ai_protocol);
    if(cnx == -1) continue;
    reuse_err = setsockopt(cnx, SOL_SOCKET, SO_REUSEADDR, &reuse, sizeof (reuse));
@@ -81,8 +85,6 @@ void server(const char *portname)
     errx(EXIT_FAILURE,"mdr no connect");
   }
   
-  
-         
   // Error management
   if (reuse_err == -1)
       errx(EXIT_FAILURE, "Fail to set socket options");
@@ -94,10 +96,14 @@ void server(const char *portname)
   int fdcnx;
   for(;;)
     {
+
       if((fdcnx = accept(fd_server,NULL,NULL)) == -1)
         err(3,"mdr lol whole infini");
-      echo(fdcnx,fdcnx);
-      close(fdcnx);
+      if(fork()) {
+        echo(fdcnx,fdcnx);
+        close(fdcnx);
+      
+      }
     }
 }
 
