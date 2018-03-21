@@ -1,7 +1,7 @@
 #ifndef RSA_H_
 #define RSA_H_
 #include "primes.h"
-
+#include "lnb.h"
 void create_keys(size_t *res, size_t maxd);
 //Fills res with n, e, d in this order
 //( n, e ) is the public key to give to others

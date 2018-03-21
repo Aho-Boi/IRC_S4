@@ -6,6 +6,7 @@ void create_keys(size_t *res, size_t maxd)
   size_t e = 65537;
   size_t p = createprime(1000, 2); //p a prime > 100 000 000 on 4 bytes
   size_t q = createprime(1000, 2); //q a prime > 100 000 000 on 4 bytes
+  
   size_t n = p * q;
   size_t ph = (p - 1) * (q - 1);
   size_t d = euclide(e, ph);
@@ -45,8 +46,10 @@ int test_keys(size_t *keys)
 
 int main()
 {
+  /*  
   size_t *keys = malloc(3 * sizeof(size_t));
   create_keys(keys, 10000000);
+
   while(!test_keys(keys)){
     create_keys(keys, 10000000);
   }
@@ -77,6 +80,34 @@ int main()
   free(decrypted);
   free(encrypted);
   free(keys);
+  */
+
+  /*
+  printf("%lu\n", pows(3, 10));
+  lnb *test = lutolnb(pows(3,10));
+  print_lnb(test);
+  printf("\n%lu\n", lnbtolu(test));
+  free(test->bytes);
+  free(test);
+  */
   
+  lnb *test = lutolnb(3);
+  lnb *pro = lutolnb(1000);
+  print_lnb(test);
+  print_lnb(pro);
+  //lsum(test, pro);
+  //growlnb(test, 1);
+  lnb *res = lprod(test, pro);
+  
+  print_lnb(res);
+  
+  free(test->bytes);
+  free(test);
+  free(pro->bytes);
+  free(pro);
+  free(res->bytes);
+  free(res);
   return 0;
+
+
 }

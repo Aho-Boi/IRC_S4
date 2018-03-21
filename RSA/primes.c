@@ -44,14 +44,10 @@ size_t createrandom(size_t bsize)
 size_t createprime(size_t min, size_t bytesize)
 {
   size_t r = 0;
-  for(; !r || ( min && r < min);r = createrandom(bytesize) ){
-    continue;
-  }
+  for(; !r || ( min && r < min);r = createrandom(bytesize) );
 
-  if ( !(r % 2) ) r+=1;
-  for(; !(isprime(r)); r += 2 ){
-    continue;
-    }
+    if ( !(r % 2) ) r+=1;
+  for(; !(isprime(r)); r += 2 );
   return r;
 }
 
