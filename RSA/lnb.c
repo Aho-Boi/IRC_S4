@@ -19,10 +19,13 @@ lnb *lutolnb(size_t inp)
 {
   
   lnb *res = lnb_init(sizeof(size_t));
-  for(size_t i = 0; inp != 1 && i < sizeof(size_t); i++){
+  size_t i = 0;
+  for(; inp != 1 && i < sizeof(size_t); i++){
     *( res->bytes + i) = inp % 256;
     inp /= 256;
   }
+  if ( inp == 1 )
+    res->bytes[i] += 1; 
   return res;
 }
 
@@ -96,13 +99,14 @@ lnb *lprod(lnb *a, lnb *b){
     min = b->blen;
     }
   */
-  size_t ret = 0;
-  int mem = 0;
+  int ret = 0;
+  size_t mem = 0;
   for(size_t i = 0; i < a->blen; i++){
     for(size_t j = 0; j < b->blen; j++){
       mem = res->bytes[i + j];
       res->bytes[i + j] = (mem + a->bytes[i] * b->bytes[j]) % 256;
-      ret = (a->bytes[i] * b->bytes[i] + mem ) / 256;
+      printf("%d\n", res->bytes[i + j]);
+      ret = (a->bytes[i] * b->bytes[j] + mem ) / 256;
       res->bytes[i + j + 1] += ret;
     }
   }

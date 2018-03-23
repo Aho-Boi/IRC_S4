@@ -91,15 +91,19 @@ int main()
   free(test);
   */
   
-  lnb *test = lutolnb(3);
-  lnb *pro = lutolnb(1000);
+  lnb *test = lutolnb(255);
+  lnb *pro = lutolnb(255);
+  lnb *real = lutolnb(255 * 255);
   print_lnb(test);
   print_lnb(pro);
   //lsum(test, pro);
   //growlnb(test, 1);
   lnb *res = lprod(test, pro);
-  
+
+  printf("Here is the result : ");
   print_lnb(res);
+  printf("And here is the expected result : ");
+  print_lnb(real);
   
   free(test->bytes);
   free(test);
@@ -107,6 +111,9 @@ int main()
   free(pro);
   free(res->bytes);
   free(res);
+  free(real->bytes);
+  free(real);
+
   return 0;
 
 
