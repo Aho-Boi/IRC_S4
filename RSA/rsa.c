@@ -92,18 +92,23 @@ int main()
   */
   
   lnb *test = lutolnb(255);
-  lnb *pro = lutolnb(255);
+  lnb *pro = lutolnb(2558924);
   lnb *real = lutolnb(255 * 255);
   print_lnb(test);
   print_lnb(pro);
+  printf("Is the first one superior to the other one ? %d\n", cmp(test, pro));
   //lsum(test, pro);
   //growlnb(test, 1);
   lnb *res = lprod(test, pro);
 
+  cleanlnb(res);
+  cleanlnb(real);
   printf("Here is the result : ");
   print_lnb(res);
   printf("And here is the expected result : ");
   print_lnb(real);
+
+  printf("The real takes %lu bytes and the calculated one takes %lu\n", real->blen, res->blen);
   
   free(test->bytes);
   free(test);

@@ -61,6 +61,16 @@ void growlnb(lnb *inp, size_t addb)
   }
 }
 
+void cleanlnb(lnb *inp){
+  size_t i = inp->blen - 1;
+  for(; ! *(inp->bytes + i); i--){
+    continue;
+  }
+  inp->blen = i + 1;
+  if (  (inp->bytes = realloc(inp->bytes, inp->blen)) == NULL)
+    errx(EXIT_FAILURE, "Realloc fails in cleanlnb");
+}
+
 void lsum(lnb *a, lnb *b)
 {
   if(a->blen <= b->blen)
@@ -91,24 +101,48 @@ void lsum(lnb *a, lnb *b)
 
 lnb *lprod(lnb *a, lnb *b){
   lnb *res = lnb_init(a->blen + b->blen);
-  /*
-  size_t max = b->blen;
-  size_t min = a->blen;
-  if ( a->blen > b->blen ){
-    max = a->blen;
-    min = b->blen;
-    }
-  */
+
   int ret = 0;
   size_t mem = 0;
   for(size_t i = 0; i < a->blen; i++){
     for(size_t j = 0; j < b->blen; j++){
       mem = res->bytes[i + j];
       res->bytes[i + j] = (mem + a->bytes[i] * b->bytes[j]) % 256;
-      printf("%d\n", res->bytes[i + j]);
       ret = (a->bytes[i] * b->bytes[j] + mem ) / 256;
       res->bytes[i + j + 1] += ret;
     }
   }
   return res;
 }
+
+int cmp(lnb *a, lnb *b){
+  cleanlnb(a);
+  cleanlnb(b);
+  if ( a->blen > b->blen )
+    return 1;
+  else if( a->blen < b->blen )
+    return 0;
+  size_t i = a->blen - 1;
+  for(; i > 0; i--){
+    if ( a->bytes[i] > b->bytes[i] )
+      return 1;
+    else if( a->bytes[i] < b->bytes[i] )
+      return 0;
+  }
+  return 0;
+}
+
+/*
+lnb *euc(lnb *a, lnb *b){
+  size_t max = a->blen;
+  if ( b->blen > max )
+    max = b->blen;
+  lnb *res = lnb_init(max);
+
+  for(size_t i = 0; i < max; )
+}
+
+
+
+
+*/
