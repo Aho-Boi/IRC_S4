@@ -30,8 +30,14 @@ void growlnb(lnb *inp, size_t addb);
 void cleanlnb(lnb *inp);
 //Removes the useless '0' bytes before the highest power of 256 : '0' '0' '1' '123' becomes '1' '123' which is equal to 256 + 123 = 379
 
+lnb *lcopy(lnb *inp);
+//Copies inp
+
 void lsum(lnb *a, lnb *b);
 //Computes a += b
+
+void ldif(lnb *a, lnb *b);
+//Computes a -= b; Errors if b > a
 
 lnb *lprod(lnb *a, lnb *b);
 //Computes the product between 2 lnb and stores it in a new lnb
@@ -39,4 +45,8 @@ lnb *lprod(lnb *a, lnb *b);
 int cmp(lnb *a, lnb *b);
 //Returns 1 if a > b, 0 if not
 //Uses cleanlnb on both a and b
+
+lnb *euc(lnb *a, lnb *b);
+//Computes a%b
+
 #endif

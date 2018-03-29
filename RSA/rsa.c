@@ -90,17 +90,23 @@ int main()
   free(test->bytes);
   free(test);
   */
-  
-  lnb *test = lutolnb(255);
-  lnb *pro = lutolnb(2558924);
+
+
+  /*
+  lnb *test = lutolnb(512);
+  lnb *pro = lutolnb(255);
   lnb *real = lutolnb(255 * 255);
+
   print_lnb(test);
   print_lnb(pro);
+
   printf("Is the first one superior to the other one ? %d\n", cmp(test, pro));
+
   //lsum(test, pro);
   //growlnb(test, 1);
   lnb *res = lprod(test, pro);
-
+  ldif(test, pro);
+  print_lnb(test);
   cleanlnb(res);
   cleanlnb(real);
   printf("Here is the result : ");
@@ -118,7 +124,22 @@ int main()
   free(res);
   free(real->bytes);
   free(real);
+  */
+  
+  lnb *test = lutolnb(pows(2, 5) - 1);
+  lnb *t = lutolnb(pows(2, 2));
 
+  lnb *res = euc(test, t);
+
+  print_lnb(res);
+  printf("%lu", (pows(2,64) - 1) % pows(2, 32));
+  
+  free(test->bytes);
+  free(t->bytes);
+  free(test);
+  free(t);
+  free(res->bytes);
+    free(res);
   return 0;
 
 

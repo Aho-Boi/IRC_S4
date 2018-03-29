@@ -63,12 +63,23 @@ void growlnb(lnb *inp, size_t addb)
 
 void cleanlnb(lnb *inp){
   size_t i = inp->blen - 1;
-  for(; ! *(inp->bytes + i); i--){
+  for(; (! *(inp->bytes + i)) && i; i--){
     continue;
+  }
+  if ( (!i) && !(inp->bytes[0])){
+    return;
   }
   inp->blen = i + 1;
   if (  (inp->bytes = realloc(inp->bytes, inp->blen)) == NULL)
     errx(EXIT_FAILURE, "Realloc fails in cleanlnb");
+}
+
+lnb *lcopy(lnb *inp){
+  lnb *res = lnb_init(inp->blen);
+  for(size_t i = 0; i < inp->blen; i++){
+    res->bytes[i] = inp->bytes[i];
+  }
+  return res;
 }
 
 void lsum(lnb *a, lnb *b)
@@ -83,12 +94,6 @@ void lsum(lnb *a, lnb *b)
     a->bytes[i] = mem % 256;
 
     ret = mem / 256;
-    /*
-    aret = ret;
-    ret = 0;
-    if ( a->bytes[i] + b->bytes[i] + aret > 255 )
-      ret = 1;
-    */   
   }
   while ( ret ){
     mem = (a->bytes[i] + ret);
@@ -98,6 +103,26 @@ void lsum(lnb *a, lnb *b)
   }
 }
 
+void ldif(lnb *a, lnb *b){
+  cleanlnb(a);
+  cleanlnb(b);
+  if ( (b->blen > a->blen)  ||
+       (b->blen == a->blen && (a->bytes[a->blen - 1] < b->bytes[b->blen - 1])))
+    errx(EXIT_FAILURE, "difference problem, substract ends in a negative");
+  for(size_t i = 0; i < b->blen; i++){
+    if ( a->bytes[i] >= b->bytes[i] ){
+      a->bytes[i] -= b->bytes[i];
+      continue;
+    }
+    size_t j = i + 1;
+    while( !(a->bytes[j]) ){
+      a->bytes[j] = 255;
+      j++;
+    }
+    a->bytes[j] -= 1;
+    a->bytes[i] = 256 - b->bytes[i] + a->bytes[i];
+  }
+}
 
 lnb *lprod(lnb *a, lnb *b){
   lnb *res = lnb_init(a->blen + b->blen);
@@ -118,31 +143,31 @@ lnb *lprod(lnb *a, lnb *b){
 int cmp(lnb *a, lnb *b){
   cleanlnb(a);
   cleanlnb(b);
+
   if ( a->blen > b->blen )
     return 1;
-  else if( a->blen < b->blen )
+  if( a->blen < b->blen )
     return 0;
   size_t i = a->blen - 1;
-  for(; i > 0; i--){
+  for(; i < a->blen; i--){
     if ( a->bytes[i] > b->bytes[i] )
       return 1;
-    else if( a->bytes[i] < b->bytes[i] )
+    if( a->bytes[i] <= b->bytes[i] )
       return 0;
   }
   return 0;
 }
 
-/*
+
 lnb *euc(lnb *a, lnb *b){
-  size_t max = a->blen;
-  if ( b->blen > max )
-    max = b->blen;
-  lnb *res = lnb_init(max);
+  lnb *res = lcopy(a);
 
-  for(size_t i = 0; i < max; )
+  for(; !cmp(b, res);){
+    //if ( cmp(b,a) ){
+    //return a;
+    //}
+    print_lnb(res);
+    ldif(res, b);
+  }
+  return res;;
 }
-
-
-
-
-*/
