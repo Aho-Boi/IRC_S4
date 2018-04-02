@@ -126,20 +126,21 @@ int main()
   free(real);
   */
   
-  lnb *test = lutolnb(pows(2, 5) - 1);
-  lnb *t = lutolnb(pows(2, 2));
-
+  lnb *test = lutolnb(pows(2, 9) - 1);
+  lnb *t = lutolnb(pows(4, 1));
+  lnb *a = lutolnb((pows(2,9) - 1) % pows(4, 1));
   lnb *res = euc(test, t);
 
   print_lnb(res);
-  printf("%lu", (pows(2,64) - 1) % pows(2, 32));
-  
+  print_lnb(a);
   free(test->bytes);
   free(t->bytes);
   free(test);
   free(t);
   free(res->bytes);
-    free(res);
+  free(res);
+  free(a->bytes);
+  free(a);
   return 0;
 
 

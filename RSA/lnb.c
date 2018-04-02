@@ -160,13 +160,21 @@ int cmp(lnb *a, lnb *b){
 
 
 lnb *euc(lnb *a, lnb *b){
+  cleanlnb(b);
+  cleanlnb(a);
+  if ( b->blen <= sizeof(size_t) ){
+    size_t sres = 0;
+    size_t sb = lnbtolu(b);
+    size_t ipow = 1;
+    for(size_t i = 0; i < a->blen; i++){
+      sres = (sres + (ipow * a->bytes[i] % sb )) % sb; 
+      ipow *= (256 % sb);
+      ipow %= 256;
+    }
+    return lutolnb(sres);
+  }
   lnb *res = lcopy(a);
-
   for(; !cmp(b, res);){
-    //if ( cmp(b,a) ){
-    //return a;
-    //}
-    print_lnb(res);
     ldif(res, b);
   }
   return res;;
