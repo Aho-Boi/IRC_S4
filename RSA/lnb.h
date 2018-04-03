@@ -49,4 +49,6 @@ int cmp(lnb *a, lnb *b);
 lnb *euc(lnb *a, lnb *b);
 //Computes a%b
 
+void lrand(lnb *inp);
+//Fills inp with randoms from /dev/urandom
 #endif

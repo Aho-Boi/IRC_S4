@@ -6,7 +6,6 @@ void create_keys(size_t *res, size_t maxd)
   size_t e = 65537;
   size_t p = createprime(1000, 2); //p a prime > 100 000 000 on 4 bytes
   size_t q = createprime(1000, 2); //q a prime > 100 000 000 on 4 bytes
-  
   size_t n = p * q;
   size_t ph = (p - 1) * (q - 1);
   size_t d = euclide(e, ph);
@@ -46,7 +45,8 @@ int test_keys(size_t *keys)
 
 int main()
 {
-  /*  
+
+  /*
   size_t *keys = malloc(3 * sizeof(size_t));
   create_keys(keys, 10000000);
 
@@ -81,67 +81,36 @@ int main()
   free(encrypted);
   free(keys);
   */
-
+  
   /*
-  printf("%lu\n", pows(3, 10));
-  lnb *test = lutolnb(pows(3,10));
-  print_lnb(test);
-  printf("\n%lu\n", lnbtolu(test));
-  free(test->bytes);
-  free(test);
+  size_t *keys = malloc(3 * sizeof(size_t));
+  create_keys(keys, 1000000);
+
+  while(!test_keys(keys)){
+    create_keys(keys, 1000000);
+  }
+
+  char mes[] = "SABRI LE CON";
+
+  size_t len = 0;
+  for(; mes[len]; len++);
+  int *encrypted = malloc(len * sizeof(int));
+  for(size_t i = 0; i < len; i++){
+    *(encrypted + i) = encrypt(mes[i], keys[0], keys[1]);
+    printf("The letter %c is encrypted into %d\n", mes[i], encrypted[i]);
+  }
+  char *decrypted = malloc(len);
+  for(size_t i = 0; i < len; i++){
+    *(decrypted + i) = decrypt(encrypted[i], keys[2], keys[0]); 
+    printf("The letter %c is decrypted into %c\n", mes[i], decrypted[i]);
+  }
+  printf("%s\n", decrypted);
+  free(decrypted);
+  free(encrypted);
+  free(keys);
   */
 
-
-  /*
-  lnb *test = lutolnb(512);
-  lnb *pro = lutolnb(255);
-  lnb *real = lutolnb(255 * 255);
-
-  print_lnb(test);
-  print_lnb(pro);
-
-  printf("Is the first one superior to the other one ? %d\n", cmp(test, pro));
-
-  //lsum(test, pro);
-  //growlnb(test, 1);
-  lnb *res = lprod(test, pro);
-  ldif(test, pro);
-  print_lnb(test);
-  cleanlnb(res);
-  cleanlnb(real);
-  printf("Here is the result : ");
-  print_lnb(res);
-  printf("And here is the expected result : ");
-  print_lnb(real);
-
-  printf("The real takes %lu bytes and the calculated one takes %lu\n", real->blen, res->blen);
-  
-  free(test->bytes);
-  free(test);
-  free(pro->bytes);
-  free(pro);
-  free(res->bytes);
-  free(res);
-  free(real->bytes);
-  free(real);
-  */
-  
-  lnb *test = lutolnb(pows(2, 9) - 1);
-  lnb *t = lutolnb(pows(4, 1));
-  lnb *a = lutolnb((pows(2,9) - 1) % pows(4, 1));
-  lnb *res = euc(test, t);
-
-  print_lnb(res);
-  print_lnb(a);
-  free(test->bytes);
-  free(t->bytes);
-  free(test);
-  free(t);
-  free(res->bytes);
-  free(res);
-  free(a->bytes);
-  free(a);
-  return 0;
-
-
+  printf("WHAT I GET : %lu\n", mod(3, 24, 370456));
+  printf("WHAT I ACTUALY WANT : %lu\n", pows(3, 24) % 370456 );
+  return 1;
 }

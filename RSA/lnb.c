@@ -167,9 +167,9 @@ lnb *euc(lnb *a, lnb *b){
     size_t sb = lnbtolu(b);
     size_t ipow = 1;
     for(size_t i = 0; i < a->blen; i++){
-      sres = (sres + (ipow * a->bytes[i] % sb )) % sb; 
+      sres = (sres + ((ipow * a->bytes[i]) % sb )) % sb; 
       ipow *= (256 % sb);
-      ipow %= 256;
+      ipow %= sb;
     }
     return lutolnb(sres);
   }
@@ -177,5 +177,20 @@ lnb *euc(lnb *a, lnb *b){
   for(; !cmp(b, res);){
     ldif(res, b);
   }
-  return res;;
+  return res;
+}
+
+void lrand(lnb *inp){
+  int fdurd;
+  if ( (fdurd = open("/dev/urandom", O_RDONLY)) == -1 )
+    errx(EXIT_FAILURE, "Open fails in funtion 'createrandom'");
+  char *random = malloc(inp->blen);
+  if ( read(fdurd, random, inp->blen) < 0 )
+    errx(EXIT_FAILURE, "Read fails in function 'createrandom'");
+  close(fdurd);
+
+  for(size_t i = 0; i < inp->blen; i++){
+    inp->bytes[i] = random[i];
+  }
+  free(random);
 }

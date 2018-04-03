@@ -36,15 +36,15 @@ size_t createrandom(size_t bsize)
   }
   free(random);
   return res;
-
-  
   
 }
 
 size_t createprime(size_t min, size_t bytesize)
 {
   size_t r = 0;
-  for(; !r || ( min && r < min);r = createrandom(bytesize) );
+  for(; !r || ( min && r < min);r = createrandom(bytesize) ){
+    continue;
+  }
 
     if ( !(r % 2) ) r+=1;
   for(; !(isprime(r)); r += 2 );
@@ -74,52 +74,26 @@ size_t euclide(size_t a, size_t b)
   return -1 * u;
 }
 
-size_t mod(size_t a, size_t pow, size_t n)
-{
-  size_t b = 1;
-  for(size_t i = 0; i < pow; i++){
-    b *= a;
-    b %= n;
+/* size_t mod(size_t a, size_t pow, size_t n) */
+/* { */
+/*   size_t b = 1; */
+/*   for(size_t i = 0; i < pow; i++){ */
+/*     b *= a; */
+/*     b %= n; */
+/*   } */
+/*   return b; */
+/* } */
+
+size_t mod(size_t a, size_t pow, size_t n){
+  size_t res = 1;
+  size_t a2 = a;
+  for(; pow; pow /= 2){
+    if ( pow % 2 )
+      res *= a2 % n;
+    res %= n;
+    printf("%lu\n", res);
+    a2 *= a2;
+    a2 %= n;
   }
-  return b;
+  return res;
 }
-
-/*
-
-int main(int argc, char *argv[])
-{
-  char *end;
-  size_t p = strtol(argv[1], &end, 10);
-  if ( isprime(p) )
-    printf("That number is prime\n");
-  else
-    printf("This number is not prime\n");
-  return 0*argc;
-}
-
-*/
-/*
-int main(void)
-{
-  size_t *era = malloc(100000 * sizeof(size_t));
-  size_t *mem = era;
-  for(size_t i = 2; i != 1000001; i++){
-    if ( isprime(i) ){
-      printf("%lu is prime\n", i);
-      *era = i;
-      era++;
-    }
-  }
-  *era = 0;
-  size_t j = 0;
-  for (; *(mem + j); j++){
-    printf(" %lu,", *(mem + j));
-  }
-  printf("\tAre prime, for a total of %lu primes to 100\n", j);
-  free(mem);
-
-  return 0;
-}
-*/
-
-
