@@ -11,11 +11,10 @@
 #include <unistd.h>
 #define TAILLE_TAMPON 256
  
-#define IP "127.0.01"
-#define PORT 8888
+#define IP "198.100.148.10"
+#define PORT 6969
 
-int
-socket_creer(void)
+int socket_creer(void)
 {
     int sock;
  
@@ -25,8 +24,7 @@ socket_creer(void)
     return sock;
 }
  
-int
-socket_connecter(int sock, char* ip, int port)
+int socket_connecter(int sock, char* ip, int port)
 {
     struct sockaddr_in serveur;
     socklen_t taille = sizeof(struct sockaddr);
@@ -41,16 +39,14 @@ socket_connecter(int sock, char* ip, int port)
     return 1;
 }
  
-void
-fdset_initialiser(fd_set* rfds, int sock)
+void fdset_initialiser(fd_set* rfds, int sock)
 {
     FD_ZERO(rfds);
     FD_SET(STDIN_FILENO, rfds);
     FD_SET(sock, rfds);
 }
  
-int
-main(void)
+int main(void)
 {
     int sock;
     int taille;
