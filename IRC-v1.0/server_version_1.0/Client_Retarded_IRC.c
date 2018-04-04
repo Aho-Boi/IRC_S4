@@ -11,8 +11,8 @@
 #include <unistd.h>
 #define TAILLE_TAMPON 256
  
-#define IP "127.0.01"
-#define PORT 8888
+#define IP "198.100.148.10"
+#define PORT 6969
 
 int
 socket_creer(void)

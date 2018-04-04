@@ -13,7 +13,7 @@
     
 #define TRUE   1 
 #define FALSE  0 
-#define PORT 8888 
+#define PORT 6969 
 
 char* namelist(char* tab[]);
  
@@ -32,7 +32,7 @@ int main()
         
     //a message 
     print();
-    char *message = "RETARDED_IRC.exe v1.0 \r\n";  
+    char *message = "RETARDED_IRC.exe v2.0 \r\n";  
     
     //initialise all client_socket[] to 0 so not checked 
     for (i = 0; i < max_clients; i++)  
