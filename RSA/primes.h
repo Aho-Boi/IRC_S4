@@ -29,4 +29,7 @@ size_t euclide(size_t a, size_t b);
 size_t mod(size_t a, size_t pow,  size_t n);
 //Returns (a^pow) % n
 
+void save_primes(size_t max);
+
+int fisprime(size_t in);
 #endif

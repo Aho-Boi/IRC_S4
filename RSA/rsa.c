@@ -43,7 +43,7 @@ int test_keys(size_t *keys)
   return 1;
 }
 
-int main()
+int main(int argc, char **argv)
 {
 
   /*
@@ -81,36 +81,93 @@ int main()
   free(encrypted);
   free(keys);
   */
+
+  if ( argc != 2 )
+    errx(EXIT_FAILURE, "Needs an argument");
   
-  /*
-  size_t *keys = malloc(3 * sizeof(size_t));
-  create_keys(keys, 1000000);
+  size_t i;
 
-  while(!test_keys(keys)){
-    create_keys(keys, 1000000);
+  sscanf(*(argv + 1), "%lu", &i);
+
+  
+  lnb *r = lnb_init(i);
+  lrand(r);
+
+  if( i == 1 )
+    i++;
+  
+  lnb *su = lnb_init(i - 1);
+  lrand(su);
+  for(; cmp(su, r) ;){
+    lrand(su);
   }
+ 
+  cleanlnb(r);
+  cleanlnb(su);
+  lnb *cp = lcopy(r);
+  print_lnb(r);
+  printf("  +  \n");
+  print_lnb(su);
+  printf("  =\n");
+  lsum(r, su);
+  print_lnb(r);
 
-  char mes[] = "SABRI LE CON";
+  printf("\n");
+  if ( i < 9 )
+    printf("\n\nWhich is : %lu + %lu = %lu\n\n"
+	   , lnbtolu(cp), lnbtolu(su), lnbtolu(r));
+  lfree(cp);
+  printf("\n");
+  cleanlnb(r);
+  cleanlnb(su);
+  lnb *cp2 = lcopy(r);
+  print_lnb(r);
+  printf("  -  \n");
+  print_lnb(su);
+  printf("  =\n");
+  ldif(r, su);
+  print_lnb(r);
+  
+  if ( i < 9 )
+    printf("\n\nWhich is : %lu - %lu = %lu\n\n"
+	   , lnbtolu(cp2), lnbtolu(su), lnbtolu(r));
+  lfree(cp2);
 
-  size_t len = 0;
-  for(; mes[len]; len++);
-  int *encrypted = malloc(len * sizeof(int));
-  for(size_t i = 0; i < len; i++){
-    *(encrypted + i) = encrypt(mes[i], keys[0], keys[1]);
-    printf("The letter %c is encrypted into %d\n", mes[i], encrypted[i]);
-  }
-  char *decrypted = malloc(len);
-  for(size_t i = 0; i < len; i++){
-    *(decrypted + i) = decrypt(encrypted[i], keys[2], keys[0]); 
-    printf("The letter %c is decrypted into %c\n", mes[i], decrypted[i]);
-  }
-  printf("%s\n", decrypted);
-  free(decrypted);
-  free(encrypted);
-  free(keys);
-  */
+  printf("\n\n");
+  cleanlnb(r);
+  cleanlnb(su);  
+  print_lnb(r);
+  printf("  %%  \n");
+  print_lnb(su);
+  printf("  =\n");
+  lnb *di = euc(r, su);
+  cleanlnb(di);
+  print_lnb(di);
 
-  printf("WHAT I GET : %lu\n", mod(3, 24, 370456));
-  printf("WHAT I ACTUALY WANT : %lu\n", pows(3, 24) % 370456 );
+  if ( i < 9 )
+    printf("\n\nWhich is : %lu %% %lu = %lu\n\n"
+	   , lnbtolu(r), lnbtolu(su), lnbtolu(di));
+  
+
+  printf("\n\n");
+  
+  print_lnb(r);
+  printf("  *  \n");
+  print_lnb(su);
+  printf("  =\n");
+  lnb * pro = lprod(r, su);
+  cleanlnb(pro);
+  print_lnb(pro);
+
+  if ( i < 9 && pro->blen < 9)
+    printf("\n\nWhich is : %lu * %lu = %lu\n\n"
+	   , lnbtolu(r), lnbtolu(su), lnbtolu(pro));
+
+  
+  lfree(pro);
+  lfree(r);
+  lfree(su);
+  lfree(di);
+  
   return 1;
 }

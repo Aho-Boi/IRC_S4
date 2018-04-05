@@ -97,3 +97,36 @@ size_t mod(size_t a, size_t pow, size_t n){
   }
   return res;
 }
+
+void save_primes(size_t max){
+  FILE *f = fopen("primes.save", "w+");
+  if ( !f )
+    errx(EXIT_FAILURE, "save_primes");
+  size_t meh = 2;
+  fprintf(f, "%lu\n", meh);
+  for(size_t i = 3; i <= max; i++){
+    if(!(i%100000))
+      printf("%lu\n", i);
+    if(isprime(i)){
+      fprintf(f, "%lu\n", i);
+    }
+  }
+  fclose(f);
+}
+
+int fisprime(size_t in){
+  FILE *f = fopen("primes.save", "r");
+  if ( !f )
+    errx(EXIT_FAILURE, "fisprime");
+  size_t *p = malloc(sizeof(size_t));
+
+  for(; (*p) * (*p) < in;){
+    fscanf(f,"%lu\n", p);
+    if (!(*p) ||  !(in % (*p)) ){
+      fclose(f);
+      return 0;
+    }
+  }
+  fclose(f);
+  return 1;
+}

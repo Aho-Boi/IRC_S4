@@ -46,9 +46,9 @@ void print_lnb(lnb *inp)
 {
   
   for(size_t i = inp->blen-1; i; i--){
-    printf("'%u'", inp->bytes[i]);
+    printf(" | %u", inp->bytes[i]);
   }
-  printf("'%u'\n", inp->bytes[0]);
+  printf(" | %u |\n", inp->bytes[0]);
 }
 
 void growlnb(lnb *inp, size_t addb)
@@ -80,6 +80,11 @@ lnb *lcopy(lnb *inp){
     res->bytes[i] = inp->bytes[i];
   }
   return res;
+}
+
+void lfree(lnb *inp){
+  free(inp->bytes);
+  free(inp);
 }
 
 void lsum(lnb *a, lnb *b)
@@ -183,14 +188,56 @@ lnb *euc(lnb *a, lnb *b){
 void lrand(lnb *inp){
   int fdurd;
   if ( (fdurd = open("/dev/urandom", O_RDONLY)) == -1 )
-    errx(EXIT_FAILURE, "Open fails in funtion 'createrandom'");
+    errx(EXIT_FAILURE, "Open fails in funtion 'lrand'");
   char *random = malloc(inp->blen);
+  if ( !random )
+    errx(EXIT_FAILURE, "malloc fails in lrand");
   if ( read(fdurd, random, inp->blen) < 0 )
-    errx(EXIT_FAILURE, "Read fails in function 'createrandom'");
+    errx(EXIT_FAILURE, "Read fails in function 'lrand'");
   close(fdurd);
-
+  
   for(size_t i = 0; i < inp->blen; i++){
     inp->bytes[i] = random[i];
   }
   free(random);
+}
+
+/*
+void lprint(lnb *inp){
+  lnb *cp = lcopy(inp);
+  lnb *ten = lutolnb(10);
+  for(; cp->blen && *cp->bytes;){
+    lnb *res = euc(inp, 10);
+    printf("%u", *res->bytes);
+    lfree(res);
+  }
+}
+*/
+
+void lprint(lnb *inp){
+  lnb *cp = lcopy(inp);
+  size_t opow = 1;
+  size_t ret = 0;
+  for(; cp->blen && *cp->bytes;cleanlnb(cp)){
+    for(size_t i = 0; i < cp ->blen; i++){
+      ret += (cp->bytes[i] * opow) % 10;
+      ret %= 10;
+      opow = (opow * 256) % 10;
+      print_lnb(cp);
+      //printf("%lu\n", ret);
+      if (ret){
+	lnb *di = lutolnb(ret);
+	ldif(cp, di);
+	lfree(di);
+      }
+      cp->bytes[i] =  cp->bytes[i]  * pows(256, i) / 10; 
+      cp->bytes[i] %= pows(256, i);
+    }
+    printf("%lu\n", ret);
+    
+
+    ret = 0;
+    opow = 1;
+  }
+  lfree(cp);
 }

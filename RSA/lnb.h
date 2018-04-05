@@ -33,6 +33,8 @@ void cleanlnb(lnb *inp);
 lnb *lcopy(lnb *inp);
 //Copies inp
 
+void lfree(lnb *inp);
+
 void lsum(lnb *a, lnb *b);
 //Computes a += b
 
@@ -51,4 +53,6 @@ lnb *euc(lnb *a, lnb *b);
 
 void lrand(lnb *inp);
 //Fills inp with randoms from /dev/urandom
+
+void lprint(lnb *inp);
 #endif
