@@ -67,11 +67,11 @@ int main(void)
 	select(sock + 1, &rfds, NULL, NULL, NULL);
 	if (FD_ISSET(STDIN_FILENO, &rfds))
 	{
-	   fgets(tampon, TAILLE_TAMPON - 1, stdin);
-	  /*  if(fgets(tampon, TAILLE_TAMPON - 1, stdin) == NULL)
+	  // fgets(tampon, TAILLE_TAMPON - 1, stdin);
+	    if(fgets(tampon, TAILLE_TAMPON - 1, stdin) == NULL)
       {
         errx(3,"exit_fget");
-      }*/
+      }
 	    if ((taille = send(sock, tampon, strlen(tampon), 0)) == -1)	
 		return -1;
 	    if (strcmp("/quitter", tampon) == 0)
