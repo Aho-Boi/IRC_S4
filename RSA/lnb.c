@@ -241,3 +241,5 @@ void lprint(lnb *inp){
   }
   lfree(cp);
 }
+
+//https://books.google.fr/books?id=tX_SBQAAQBAJ&pg=PA4&lpg=PA4&dq=base+256+operations&source=bl&ots=BwpOluBaov&sig=8v87LhIW9f6ckRDaofyNhfrIF5E&hl=en&sa=X&ved=2ahUKEwjZs77G87HaAhVMbVAKHTV4CKsQ6AEwBXoECAIQVA#v=onepage&q=base%20256%20operations&f=false
