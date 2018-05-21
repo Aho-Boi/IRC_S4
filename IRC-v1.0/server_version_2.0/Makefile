@@ -4,14 +4,20 @@ CC=gcc -fsanitize=address
 CPPFLAGs=
 CFLAGS= -Wall -Wextra -std=c99 -O2 -g -pthread
 LDFLAGS=
-LDLIBS=
+LDLIBS= -lrt -lm
  
-SRC1 = server_v_1.0.c
-OBJ1 = ${SRC1:.c=.o}
+OBJ = server_v2.0.o ../RSA_version_2.0/primes.o ../RSA_version_2.0/rsa.o ../RSA_version_2.0/lnb.o
+DEP = ${OBJ:.o=.d}
 
-all: server_v_1.0
- 
+
+all: server_v2.0
+
+
+server_v2.0: ${OBJ}
+
 clean:
-	rm -f *.o
- 
+	${RM} ${OBJ} ${DEP} server_v2.0
+	rm -f *~
+
+
 # END

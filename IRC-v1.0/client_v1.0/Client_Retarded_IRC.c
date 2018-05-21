@@ -74,9 +74,7 @@ int main(void)
     while(pthread_join(tid, NULL)){
       pthread_create(&tid, NULL, myThread, keys);
     }
-    
 
-    
     if (socket_connecter(sock, IP, PORT) == -1){
       free(keys);
       return -1;
@@ -93,18 +91,23 @@ int main(void)
 	      {
 		errx(3,"exit_fget");
 	      }
-
+	    if (strcmp("/quitter", tampon) == 0)
+	      break;
 	    
 	    size_t len = 1;
 	    for(; tampon[len]; len++){
 	      continue;
 	    }
+
 	    lnb *public0 = lutolnb(keys[0]);	    
 	    lnb *public1 = lutolnb(keys[1]);
+    
 	    lnb **encrypted = malloc(len * sizeof(lnb));
 	    for(size_t i = 0; i < len - 1; i++){
 	      *(encrypted + i) = lutolnb(ncrypt(tampon[i], keys[0], 65537));
 	    }
+
+	    
 	    for(size_t k = 0; k < 8; k++){
 	      tampon[k] = public0->bytes[k];
 	    }
@@ -120,7 +123,22 @@ int main(void)
 	    for(size_t k = 0; k < 8; k++){
 	      tampon[16 + len * 8 + k] = 0;
 	    }
+	    /*
+	    for(size_t i = 0; i < len + 1; i++){
+	      for(size_t k = 0; k < 8; k++){
+		printf("%d\t",tampon[i * 8 + k]);
+	      }
+	    }
+	    */
+	    lfree(public0);	    
+	    lfree(public1);
+	    for(size_t i = 0; i < len - 1; i++){
+	      lfree(encrypted[i]);
+	    }
+	    free(encrypted);
+	    
 
+	   
 	    /*
 	    /////////////////////////////
 	    
@@ -152,26 +170,24 @@ int main(void)
 	    //////////////////////////////
 	    */
 	    
-	    if ((taille = send(sock, tampon, 8 * len, 0)) == -1)	
-		return -1;
-	    if (strcmp("/quitter", tampon) == 0)
-		continuer = 0;
+	    if ((taille = send(sock, tampon, 8 * len + 8, 0)) == -1)	
+	      return -1;
+	    
 	}
 	else if (FD_ISSET(sock, &rfds))
-	{
+	  {
 	    if ((taille = recv(sock, 
 			       tampon, 
 			       TAILLE_TAMPON - 1, 
 			       0)) == -1)
-		return -1;
+	      return -1;
 	    else
-	    {
+	      {
 		tampon[taille] = '\0';
 		printf("%s\n", tampon);
-	    }
-	}
+	      }
+	  }
     }
- 
     close(sock);
     free(keys);
     return 0;

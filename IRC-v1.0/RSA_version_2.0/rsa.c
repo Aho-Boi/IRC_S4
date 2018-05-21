@@ -1,33 +1,38 @@
 #include "rsa.h"
 
 
-void create_keys(size_t *res, size_t maxd)
+void create_keys(size_t *res)
 {
   size_t e = 65537;
-  write(STDOUT_FILENO, "1", 1);
   size_t p = createprime(1000, 2); //p a prime > 100 000 000 on 4 bytes
-  size_t q = createprime(1000, 2); //q a prime > 100 000 000 on 4 byte
-  write(STDOUT_FILENO, "2", 1);
+  size_t q = createprime(1000, 2); //q a prime > 100 000 000 on 4 bytes
   size_t n = p * q;
   size_t ph = (p - 1) * (q - 1);
   size_t d = euclide(e, ph);
-  while( (ph % e == 0) || (p == q) || !( p % q ) || !(q % p) || d > maxd){
+  while( (ph % e == 0) || (p == q) || !( p % q ) || !(q % p) || d > 10000000){
     p = createprime(1000, 2); //p a prime > 100 000 000 on 4 bytes
     q = createprime(1000, 2); //q a prime > 100 000 000 on 4 bytes
     n = p * q;
     ph = (p - 1) * (q - 1);
     d = euclide(e, ph);
-    write(STDOUT_FILENO, "3", 1);
   }
 
   res[0] = n;
-  res[1] = e;
-  res[2] = d;
+  res[1] = d;
 }
 
-size_t encrypt(size_t M, size_t n, size_t e)
+void *myThread(void *res)
 {
-  return mod(M, e, n);
+  create_keys(res); 
+  while(!test_keys(res)){
+    create_keys(res);
+  }
+  pthread_exit(res);
+}
+
+size_t ncrypt(size_t M, size_t n, size_t e)
+{
+return mod(M, e, n);
 }
 
 size_t decrypt(size_t C, size_t d, size_t n)
@@ -37,26 +42,30 @@ size_t decrypt(size_t C, size_t d, size_t n)
 
 int test_keys(size_t *keys)
 {
+  size_t e = 65537;
   for(size_t i = 0; i < 10; i++){
-    size_t enc = encrypt(i, keys[0], keys[1]);
-    size_t dec = decrypt(enc, keys[2], keys[0]);
+    size_t enc = ncrypt(i, keys[0], e);
+    size_t dec = decrypt(enc, keys[1], keys[0]);
     if(dec != i)
       return 0;
   }
   return 1;
 }
 
-int main(void)
+
+/*
+int main()
 {
-
-  size_t *keys = malloc(3 * sizeof(size_t));
-  create_keys(keys, 10000000);
-
-  while(!test_keys(keys)){
-    create_keys(keys, 10000000);
-  }
-  printf("The public key is : \n\tn = %lu\n\te = %lu\n\n", keys[0], keys[1]);
-  printf("The private key is : \n\td = %lu\n\n", keys[2]);
+  size_t e = 65537;
+  
+  pthread_t tid;
+  size_t *keys = malloc(2 * sizeof(size_t));
+  
+  pthread_create(&tid, NULL, myThread, keys);
+  pthread_join(tid, NULL);
+  
+  printf("The public key is : \n\tn = %lu\n\te = %lu\n\n", keys[0], e);
+  printf("The private key is : \n\td = %lu\n\n", keys[1]);
 
   char mes[] = "ABCDEFGHIJKLMNOPQRSTUVWXYZ 1234567890 abcdefghijklmnopqrstuvwxyz";
 
@@ -66,7 +75,7 @@ int main(void)
   for(; mes[len]; len++);
   int *encrypted = malloc(len * sizeof(int));
   for(size_t i = 0; i < len; i++){
-    *(encrypted + i) = encrypt(mes[i], keys[0], keys[1]);
+    *(encrypted + i) = ncrypt(mes[i], keys[0], keys[1]);
     printf("The letter %c is encrypted into %d\n", mes[i], encrypted[i]);
   }
   
@@ -82,6 +91,7 @@ int main(void)
   free(decrypted);
   free(encrypted);
   free(keys);
-
-  return 1;
+  
+  return 0;
 }
+*/

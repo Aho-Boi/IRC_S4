@@ -19,7 +19,6 @@ int isprime(size_t p)
     if ( !(p % i) )
       return 0;
   }
-  write(STDOUT_FILENO, "IN", 2);
   return 1;
 }
 
@@ -47,14 +46,11 @@ size_t createrandom(size_t bsize)
 size_t createprime(size_t min, size_t bytesize)
 {
   size_t r = 0;
-  write(STDOUT_FILENO, "meh", 3);
   for(; !r || ( min && r < min);r = createrandom(bytesize) ){
     continue;
   }
-  write(STDOUT_FILENO, "oui", 3);
 
   if ( !(r % 2) ) r+=1;
-  write(STDOUT_FILENO, "BE", 2);
   for(; !(isprime(r)); r += 2 ){
     if ( (r + 2  == LIM) || (r + 1  == LIM))
       return createprime(min, bytesize);
