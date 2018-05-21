@@ -52,7 +52,7 @@ void fdset_initialiser(fd_set* rfds, int sock)
 
 
 
-int main(void)
+int main(int argc, char **argv)
 {
     int sock;
     int taille;
@@ -62,9 +62,6 @@ int main(void)
    
     if ((sock = socket_creer()) == -1)
 	return -1;
-
-
-
     
 
     pthread_t tid;
@@ -123,13 +120,33 @@ int main(void)
 	    for(size_t k = 0; k < 8; k++){
 	      tampon[16 + len * 8 + k] = 0;
 	    }
-	    /*
-	    for(size_t i = 0; i < len + 1; i++){
-	      for(size_t k = 0; k < 8; k++){
-		printf("%d\t",tampon[i * 8 + k]);
+	   
+
+
+	    if(argc == 2){
+	      lnb *pro = lutolnb(pows(2, 64) - 1);
+	      for(size_t i = 0; i < len - 1; i++){
+		lnb *pre = lutolnb(0);
+		for(size_t k = 0; k < 8; k++){
+		  pre->bytes[k] = tampon[16 + i * 8 + k];
+		}
+		lnb *toc = lutolnb(pows(i + 1, 14));
+		lnb *res = lprod(pro, pre);
+		lfree(pre);
+		lnb *res2 = lprod(res, toc);
+		lfree(res);
+		lfree(toc);
+		lnb *res3 = lprod(res2, pro);
+		res2 = lprod(res3, pro);
+		res3 = lprod(res2, pro);
+		lfree(res2);
+		cleanlnb(res3);
+		print_lnb(res3);
 	      }
+	      lfree(pro);
+	      printf("\n");
 	    }
-	    */
+	    
 	    lfree(public0);	    
 	    lfree(public1);
 	    for(size_t i = 0; i < len - 1; i++){
@@ -138,38 +155,6 @@ int main(void)
 	    free(encrypted);
 	    
 
-	   
-	    /*
-	    /////////////////////////////
-	    
-	    lnb *tmp = lnbtolu(0);
-	    char *res = malloc(256);
-	    for(size_t k = 0; k < 8; k++){
-	      tmp->bytes[k] = tampon[k];
-	    }
-	    size_t pub0 = lnbtolu(tmp);
-
-	    for(size_t k = 0; k < 8; k++){
-	      tmp->bytes[k] = tampon[8 + k];
-	    }
-	    size_t pub1 = lnbtolu(tmp);
-	    
-	    size_t prov;
-	    for(size_t i = 0; i < 256; i++){
-	      for(size_t k = 0; k < 8; k++){
-		tmp->bytes[k] = tampon[16 + i * 8 + k];
-	      }
-	      prov = lnbtolu(tmp);
-	      prov = decrypt(prov, pub0, pub1);
-	      res[i] = prov;
-	      if (!prov){
-		break;
-	      }
-	    }
-
-	    //////////////////////////////
-	    */
-	    
 	    if ((taille = send(sock, tampon, 8 * len + 8, 0)) == -1)	
 	      return -1;
 	    
@@ -190,5 +175,5 @@ int main(void)
     }
     close(sock);
     free(keys);
-    return 0;
+    return 0 * (*argv[0]);
 }
