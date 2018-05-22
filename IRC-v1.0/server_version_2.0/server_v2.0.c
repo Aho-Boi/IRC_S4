@@ -67,7 +67,7 @@ int main()
     
     //a message 
     print();
-    char *message = "RETARDED_IRC.exe v2.0 \r\n ┌∩┐(◣_◢)┌∩┐ \n";  
+    char *message = "RETARDED_IRC.exe v2.0\n";  
     
     //initialise all client_socket[] to 0 so not checked 
     for (i = 0; i < max_clients; i++)  
